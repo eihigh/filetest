@@ -7,24 +7,28 @@ import (
 )
 
 func TestExists(t *testing.T) {
+	setPerm()
 	if !Exists(tf("readable")) {
 		t.Errorf("Exists(readable): want true")
 	}
 }
 
 func TestFile(t *testing.T) {
+	setPerm()
 	if !IsFile(tf("readable")) {
 		t.Errorf("IsFile(readable): want true")
 	}
 }
 
 func TestDir(t *testing.T) {
+	setPerm()
 	if !IsDir("testfiles/") {
 		t.Errorf("IsDir(testfiles)/: want true")
 	}
 }
 
 func TestZero(t *testing.T) {
+	setPerm()
 	if !IsZero(tf("readable")) {
 		t.Errorf("IsZero(readable): want true")
 	}
@@ -34,8 +38,7 @@ func TestZero(t *testing.T) {
 }
 
 func TestReadable(t *testing.T) {
-	stat, _ := os.Stat(tf("writable"))
-	t.Logf(stat.Mode().String())
+	setPerm()
 	if !IsReadable(tf("readable")) {
 		t.Errorf("IsReadable(readable): want true")
 	}
@@ -48,6 +51,7 @@ func TestReadable(t *testing.T) {
 }
 
 func TestWritable(t *testing.T) {
+	setPerm()
 	if !IsWritable(tf("writable")) {
 		t.Errorf("IsWritable(writable): want true")
 	}
@@ -60,6 +64,7 @@ func TestWritable(t *testing.T) {
 }
 
 func TestExecutable(t *testing.T) {
+	setPerm()
 	if !IsExecutable(tf("executable")) {
 		t.Errorf("IsExecutable(executable): want true")
 	}
@@ -69,6 +74,12 @@ func TestExecutable(t *testing.T) {
 	if IsExecutable(tf("writable")) {
 		t.Errorf("IsExecutable(writable): want false")
 	}
+}
+
+func setPerm() {
+	os.Chmod(tf("readable"), 0400)
+	os.Chmod(tf("writable"), 0200)
+	os.Chmod(tf("executable"), 0100)
 }
 
 func tf(name string) string {
